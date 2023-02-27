@@ -14,9 +14,8 @@ pipeline {
         branch 'back'
       }
       steps {
-        bat 'python app.py &'
-        bat 'python test_backend_flask.py'
-        bat 'pkill -f "python app.py"'
+        bat 'python Backend/app.py'
+        bat 'python Backend/test_backend_flask.py'
       }
     }
     stage('Stress test and push to release') {
