@@ -40,8 +40,7 @@ pipeline {
         branch 'main'
         changeset '.*'
       }
-      steps{
-      }
+    
     }
   }
 }
