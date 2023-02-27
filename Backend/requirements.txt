@@ -1,0 +1,8 @@
+flask
+flask-cors
+pandas
+nltk
+numpy
+gensim
+scikit-learn
+prometheus_flask_exporter
