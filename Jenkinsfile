@@ -17,32 +17,31 @@ pipeline {
         bat 'python Backend/app.py'
         bat 'python Backend/test_backend_flask.py'
       }
-    }
-    stage('Stress test and push to release') {
-      when {
-        branch 'develop'
-      }
-      steps {
-        bat 'docker-compose up --build -d'
-        bat 'python StressTest.py'
-      }
-    }
-    stage('Wait for user acceptance on release branch') {
-      when {
-        branch 'develop'
-      }
-      steps {
-        input message: 'Ready to deploy to main branch?', ok: 'Deploy'
-      }
-    }
-    stage('Push to Dockerhub on merge to main') {
-      when {
-        branch 'main'
-        changeset '.*'
-      }
-      steps{
-        
-      }
-    }
-  }
+    }
+    stage('Stress test and push to release') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        bat 'docker-compose up --build -d'
+        bat 'python StressTest.py'
+      }
+    }
+    stage('Wait for user acceptance on release branch') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        input message: 'Ready to deploy to main branch?', ok: 'Deploy'
+      }
+    }
+    stage('Push to Dockerhub on merge to main') {
+      when {
+        branch 'main'
+        changeset '.*'
+      }
+      steps{
+      }
+    }
+  }
 }
