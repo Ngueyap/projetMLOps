@@ -1,7 +1,7 @@
 pipeline {
-  agent any
+  agent any
   environment {
-    IMAGE_TAG = "ci-docker:latest"
+    IMAGE_TAG = "projet:latest"
   }
   stages {
     stage('Checkout') {
