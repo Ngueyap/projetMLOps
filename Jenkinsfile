@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Build and test feature branches') {
       when {
-        branch 'back'
+        branch 'develop'
       }
       steps {
         bat 'python Backend/app.py'
