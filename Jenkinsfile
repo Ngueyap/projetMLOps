@@ -1,19 +1,19 @@
 pipeline {
   agent any
-  environment {
-    IMAGE_TAG = "projet:latest"
-  }
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
-    stage('Build and test feature branches') {
-      when {
-        branch 'back'
-      }
-      steps {
+  environment {
+    IMAGE_TAG = "projet:latest"
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Build and test feature branches') {
+      when {
+        branch 'back'
+      }
+      steps {
         bat 'python Backend/app.py'
         bat 'python Backend/test_backend_flask.py'
       }
