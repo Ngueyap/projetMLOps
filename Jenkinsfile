@@ -11,12 +11,13 @@ pipeline {
     }
     stage('Build and test feature branches') {
       when {
-        branch 'feature/*'
+        branch 'back'
       }
       steps {
-        bat 'docker build -t myapp .'
-        bat 'docker run myapp python manage.py test'
-      }
+        bat 'python app.py &'
+        bat 'python test_backend_flask.py'
+        bat 'pkill -f "python app.py"'
+      }
     }
     stage('Stress test and push to release') {
       when {
@@ -24,12 +25,12 @@ pipeline {
       }
       steps {
         bat 'docker-compose up --build -d'
-        bat 'newman run tests\\postman_collection.json'
+        bat 'python StressTest.py'
       }
     }
     stage('Wait for user acceptance on release branch') {
       when {
-        branch 'release'
+        branch 'develop'
       }
       steps {
         input message: 'Ready to deploy to main branch?', ok: 'Deploy'
@@ -41,10 +42,8 @@ pipeline {
         changeset '.*'
       }
       steps{
-        bat 'docker build -t myapp .'
-        bat 'docker tag myapp:latest myusername/myapp:latest'
-        bat 'docker push myusername/myapp:latest'
+        
       }
     }
   }
-}Dispose d’un menu contextuel
+}
