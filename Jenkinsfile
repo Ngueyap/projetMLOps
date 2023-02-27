@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Build and test feature branches') {
       steps {
-        bat 'pip install Backend/requirements.txt'
+        bat 'C:/Users/hp/AppData/Local/Programs/Python/Python38/python -m pip install Backend/requirements.txt'
         bat 'python Backend/app.py'
         bat 'python Backend/test_backend_flask.py'
       }
