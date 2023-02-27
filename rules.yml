@@ -1,0 +1,38 @@
+groups:
+- name: system
+  rules:
+  - alert: MemoryUsageHigh
+    expr: node_memory_MemAvailable / node_memory_MemTotal * 100 < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Memory usage is high (instance {{ $labels.instance }})"
+      description: "Memory usage is high on {{ $labels.instance }}. Value is {{ $value }}"
+
+  - alert: CPUUsageHigh
+    expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "CPU usage is high (instance {{ $labels.instance }})"
+      description: "CPU usage is high on {{ $labels.instance }}. Value is {{ $value }}"
+
+  - alert: CodeException
+    expr: rate(http_request_duration_seconds_count{status=~"5.."}[1m]) > 10
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Code exception occurred (instance {{ $labels.instance }})"
+      description: "Code exception occurred on {{ $labels.instance }}. Value is {{ $value }}"
+
+  - alert: SystemDown
+    expr: up == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "System is down (instance {{ $labels.instance }})"
+      description: "System is down on {{ $labels.instance }}"

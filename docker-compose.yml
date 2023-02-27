@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  backend:
+      build: ./Backend
+      ports:
+        - "5000:5000"
+      networks:
+        - my-network
+  
+  frontend:
+    build: ./app
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network 
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules/rules.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - my-network  
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 4000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      - my-network
+  
+
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - my-network
+
+
+networks:
+  my-network:
