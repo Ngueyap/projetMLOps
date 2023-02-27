@@ -1,11 +1,50 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
-    }
-}
+  agent any
+  environment {
+    IMAGE_TAG = "ci-docker:latest"
+  }
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    stage('Build and test feature branches') {
+      when {
+        branch 'feature/*'
+      }
+      steps {
+        bat 'docker build -t myapp .'
+        bat 'docker run myapp python manage.py test'
+      }
+    }
+    stage('Stress test and push to release') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        bat 'docker-compose up --build -d'
+        bat 'newman run tests\\postman_collection.json'
+      }
+    }
+    stage('Wait for user acceptance on release branch') {
+      when {
+        branch 'release'
+      }
+      steps {
+        input message: 'Ready to deploy to main branch?', ok: 'Deploy'
+      }
+    }
+    stage('Push to Dockerhub on merge to main') {
+      when {
+        branch 'main'
+        changeset '.*'
+      }
+      steps{
+        bat 'docker build -t myapp .'
+        bat 'docker tag myapp:latest myusername/myapp:latest'
+        bat 'docker push myusername/myapp:latest'
+      }
+    }
+  }
+}Dispose d’un menu contextuel
