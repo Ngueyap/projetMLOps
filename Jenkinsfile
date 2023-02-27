@@ -35,7 +35,7 @@ pipeline {
         input message: 'Ready to deploy to main branch?', ok: 'Deploy'
       }
     }
-    stage('Push to Dockerhub on merge to main') {
+    stage('Push to Dockerhub on merge to  main') {
       when {
         branch 'main'
         changeset '.*'
